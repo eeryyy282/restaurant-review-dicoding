@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -21,12 +22,10 @@ import com.example.restaurantreview.data.response.RestaurantResponse
 import com.example.restaurantreview.data.retrofit.ApiConfig
 import com.example.restaurantreview.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private val mainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +44,6 @@ class MainActivity : AppCompatActivity() {
         val itemDecoration = DividerItemDecoration(this, layoutManager.orientation)
         binding.rvReview.addItemDecoration(itemDecoration)
 
-        val mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
         mainViewModel.restaurant.observe(this) { restaurant ->
             setRestaurantData(restaurant)
         }
@@ -70,7 +68,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnSend.setOnClickListener {view ->
             mainViewModel.postReview(binding.edReview.text.toString())
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
